@@ -14,7 +14,7 @@ Uses PHP with MySQL database for maximum compatibility. PHP files included.
 1. You will need the <a href="https://android.googlesource.com/platform/frameworks/volley/">volley library</a> to compile.<br>
 2. Edit <i>php/include/Config.php</i> and fill in your database details.<br>
 3. Edit <i>app/src/main/res/values/api_keys.xml</i> and enter your Google Maps API key. (If you don't have one, you can <a href="https://developers.google.com/maps/documentation/javascript/get-api-key">get one for free here</a>).<br>
-4. Execute <i>sql/init.sql</> to set up your database tables.
+4. Execute <i>sql/init.sql</i> to set up your database tables.
 
 # License
 Distributed under MIT License, see the LICENSE file for details.
