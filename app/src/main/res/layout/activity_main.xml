@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/main_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        tools:context="com.gacsoft.letsmeethere.MainActivity">
+        
+        <LinearLayout
+            android:id="@+id/futurepast"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/futureButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/future"
+                android:onClick="onFutureClicked"
+                android:background="@drawable/button"
+                android:textColor="@color/white"
+                android:layout_weight="0.5"
+                android:enabled="false"
+                android:layout_marginRight="1dp"/>
+            <Button
+                android:id="@+id/pastButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/past"
+                android:onClick="onPastClicked"
+                android:background="@drawable/button"
+                android:textColor="@color/white"
+                android:layout_weight="0.5"
+                android:enabled="true"
+                android:layout_marginLeft="1dp"/>
+        </LinearLayout>
+
+
+        <ListView
+            android:id="@+id/eventList"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="20dp"
+            android:drawSelectorOnTop="true"
+            android:layout_below="@id/futurepast"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </ListView>
+
+        <Button
+            android:id="@+id/newEventButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:text="@string/newEvent"
+            android:layout_below="@id/eventList"
+            android:onClick="onNewEventClicked"
+            android:background="@drawable/button"
+            android:textColor="@color/white"/>
+
+    </RelativeLayout>
+</LinearLayout>
+

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/appbar_icon"
+        android:actionViewClass="android.widget.ImageView"
+        app:showAsAction="ifRoom"
+        android:title="logo"
+        />
+
+    <item
+        android:id="@+id/appbar_text"
+        android:actionViewClass="android.widget.TextView"
+        android:title="USERNAME"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/appbar_button"
+        android:actionViewClass="android.widget.Button"
+        android:title="Logout"
+        app:showAsAction="ifRoom"/>
+
+</menu>

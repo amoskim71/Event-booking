@@ -1,0 +1,36 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <!--item name="android:buttonStyle">@style/buttonStyle</item-->
+        <item name="android:listViewStyle">@style/listViewStyle</item>
+    </style>
+
+    <style name="actionBarStyle" parent="@android:style/Widget.Holo.Light.ActionBar">
+        <item name="android:background">@color/colorAppBar</item>
+    </style>
+
+    <style name="buttonStyle" parent="@android:style/Widget.Button">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:capitalize">characters</item>
+        <item name="android:layout_margin">0dip</item>
+        <item name="android:background">@drawable/button</item>
+    </style>
+
+    <style name="listViewStyle" parent="android:style/Widget.ListView">
+        <item name="background">@color/colorPrimary</item>
+        <item name="android:divider">@color/colorPrimary</item>
+        <item name="android:dividerHeight">1dp</item>
+
+        <item name="android:drawSelectorOnTop">false</item>
+        <item name="android:cacheColorHint">#00000000</item>
+    </style>
+
+</resources>
