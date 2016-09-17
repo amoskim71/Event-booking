@@ -12,6 +12,7 @@ public class AppConfig {
     public static final String UPDATE_URL = SERVER_HOST + APP_PATH + "update.php";
     public static final String SYNC_URL = SERVER_HOST + APP_PATH + "fullsync.php";
     public static final String INVITE_URL = SERVER_HOST + APP_PATH + "invite.php";
+    public static final String COMMENT_URL = SERVER_HOST + APP_PATH + "comment.php";
 
     public static final String PREFS_FILE = "LMHSavedPrefs";
     public static final String LOGGED_IN = "isLoggedIn";

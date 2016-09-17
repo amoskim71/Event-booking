@@ -148,17 +148,31 @@ class DB_Functions {
 		
 		if (!$stmt = $this->sqlconn->prepare("SELECT unique_id AS id, name, whenEvent, (owner = ?) AS owned, longitude, latitude FROM events JOIN participation WHERE events.id = participation.event_id AND participation.user_id = ?")) {				
 			return array("error" => TRUE, "error_msg" => $this->sqlconn->errno . ' ' . $this->sqlconn->error);
-		}
-		
+		}		
 		$stmt->bind_param("ii", $user["id"], $user["id"]);
 		$stmt->execute();
+		$result["events"] = mysqli_fetch_all ($stmt->get_result(), MYSQLI_ASSOC);
+		$stmt->close();
+		
+		if (!$stmt2 = $this->sqlconn->prepare("
+			SELECT eventid, name, email, cdate, post
+			FROM users 
+			JOIN (
+				SELECT unique_id AS eventid, user_id, cdate, post 
+				FROM events 
+				JOIN comments 
+				ON events.id = comments.event_id) AS com 
+			ON users.id = com.user_id 
+			")) {				
+			return array("error" => TRUE, "error_msg" => $this->sqlconn->errno . ' ' . $this->sqlconn->error);
+		}	
+		$stmt2->execute();		
 				
 		$result["error"] = FALSE;
-		$result["error_msg"] = "";
-		$result["events"] = mysqli_fetch_all ($stmt->get_result(), MYSQLI_ASSOC);
-
-
-		$stmt->close();
+		$result["error_msg"] = "";		
+		$result["comments"] = mysqli_fetch_all ($stmt2->get_result(), MYSQLI_ASSOC);
+		$stmt2->close();
+	
 		return $result;
 	}
 	
@@ -346,6 +360,60 @@ class DB_Functions {
  
         return $hash;
     }
+	
+	public function storeComment($email, $session, $eventID, $post) {
+		$stmt_user = $this->sqlconn->prepare("SELECT * FROM users WHERE email = ?");
+		$stmt_user->bind_param("s", $email);
+		$stmt_user->execute();
+		$user = $stmt_user->get_result()->fetch_assoc();
+		$stmt_user->close();
+		
+		//Check if user exists
+		if (!$user) {
+			return array("error" => TRUE, "error_msg" => "BAD_EMAIL");
+		}
+		if ($user["session"] != $session ) {
+			return array("error" => TRUE, "error_msg" => "BAD_SESSION");
+		}		
+		
+		//Check if event exists
+		if (!$stmt_event = $this->sqlconn->prepare("SELECT id FROM events WHERE unique_id =?")) {
+			return array("error" => TRUE, "error_msg" => $this->sqlconn->errno . ' ' . $this->sqlconn->error);			
+		}
+		$stmt_event->bind_param("s", $eventID);
+		$stmt_event->execute();
+		$event = $stmt_event->get_result()->fetch_assoc();
+		$stmt_event->close();
+		
+		if (!$event) {
+			return array("error" => TRUE, "error_msg" => "BAD_EVENT");
+		}
+		
+		//Check if the user is invited 
+		if (!$stmt_partic = $this->sqlconn->prepare("SELECT * FROM participation WHERE user_id = ? AND event_id = ?")) {
+			return array("error" => TRUE, "error_msg" => $this->sqlconn->errno . ' ' . $this->sqlconn->error);			
+		}
+		$stmt_partic->bind_param("ii", $user["id"], $event["id"]);
+		$stmt_partic->execute();
+		$invited = $stmt_partic->get_result()->fetch_assoc();
+		$stmt_partic->close();
+		
+		if (!$invited) {
+			return array("error" => TRUE, "error_msg" => "BAD_PARTICIPATION");
+		}
+		
+		//add comment
+		if (!$stmt_comment = $this->sqlconn->prepare("INSERT INTO comments(user_id, event_id, cdate, post) VALUES (?, ?, UNIX_TIMESTAMP()*1000, ?)")) {
+			return array("error" => TRUE, "error_msg" => $this->sqlconn->errno . ' ' . $this->sqlconn->error);			
+		}		
+		$stmt_comment->bind_param("iis", $user["id"], $event["id"], $post);
+		$result = $stmt_comment->execute();
+		$stmt_comment->close();	
+		if ($result) {
+			return array("error" => FALSE, "error_msg" => "");
+		}
+		return array("error" => TRUE, "error_msg" => "BAD_SOMETHING");		
+	}
  
 }
  

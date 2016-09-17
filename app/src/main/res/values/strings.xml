@@ -50,5 +50,14 @@
     <string name="cannotConnect">Cannot connect to server.</string>
     <string name="future">Future Events</string>
     <string name="past">Past Events</string>
+    <string name="event">Event</string>
+    <string name="comments">Comments</string>
+    <string name="description">name:</string>
+    <string name="when">when:</string>
+    <string name="commentHint">Enter new comment&#8230;</string>
+    <string name="sendingComment">Sending comment&#8230;</string>
+    <string name="sentComment">Comment sent.</string>
+    <string name="sendComment">Send Comment</string>
+    <string name="postOffline">You must be logged in to send a comment!</string>
 
 </resources>

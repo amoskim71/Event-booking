@@ -507,4 +507,10 @@ public class EventViewerActivity extends AppCompatActivity
         event.setWhen(when);
         loadFields();
     }
+
+    public void onCommentsClicked(View view) {
+        Intent intent = new Intent(this, CommentsActivity.class);
+        startActivity(intent);
+        finish();
+    }
 }

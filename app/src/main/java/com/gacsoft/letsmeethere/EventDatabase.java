@@ -17,8 +17,9 @@ import java.util.List;
 public class EventDatabase extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "letsmeethere";
-    private static final int DATABASE_VERSION = 8;
+    private static final int DATABASE_VERSION = 9;
     private static final String EVENTS_TABLE = "events";
+    private static final String COMMENTS_TABLE = "comments";
 
     private static final String KEY_KEY = "id"; //db key
     private static final String KEY_ID = "eventid"; //uuid of event
@@ -29,6 +30,9 @@ public class EventDatabase extends SQLiteOpenHelper {
     private static final String KEY_LATITUDE = "latitude"; //geological location of event
     private static final String KEY_ISNEW = "isnew"; //geological location of event
     private static final String KEY_ISMODIFIED = "ismodified"; //geological location of event
+
+    private static final String KEY_EMAIL = "email";
+    private static final String KEY_POST = "post"; //text of post
 
     public EventDatabase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -48,11 +52,22 @@ public class EventDatabase extends SQLiteOpenHelper {
                 + KEY_ISNEW + " INTEGER,"
                 + KEY_ISMODIFIED + " INTEGER" + ")";
         db.execSQL(createEventsTable);
+
+        String createCommentsTable =
+                "CREATE TABLE " + COMMENTS_TABLE + "("
+                        + KEY_KEY + " TEXT PRIMARY KEY,"
+                        + KEY_ID + " TEXT,"
+                        + KEY_NAME + " TEXT,"
+                        + KEY_EMAIL + " TEXT,"
+                        + KEY_WHEN + " INTEGER,"
+                        + KEY_POST + " TEXT" + ")";
+        db.execSQL(createCommentsTable);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + EVENTS_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + COMMENTS_TABLE);
         onCreate(db);
     }
 
@@ -70,6 +85,43 @@ public class EventDatabase extends SQLiteOpenHelper {
         values.put(KEY_ISMODIFIED, newEvent.isModified());
         db.insert(EVENTS_TABLE, null, values);
         db.close();
+    }
+
+    public void addComment(Comment comment) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(KEY_KEY, comment.getKey());
+        values.put(KEY_ID, comment.getEvent());
+        values.put(KEY_NAME, comment.getName());
+        values.put(KEY_EMAIL, comment.getEmail());
+        values.put(KEY_WHEN, comment.getWhen().getTime());
+        values.put(KEY_POST, comment.getPost());
+        db.insert(COMMENTS_TABLE, null, values);
+        db.close();
+    }
+
+    public List<Comment> getComments(String eventId) {
+        List<Comment> comments = new ArrayList<Comment>();
+        String selectEvents = "SELECT * FROM " + COMMENTS_TABLE
+                + " WHERE " + KEY_ID + " = '" + eventId + "'"
+                + " ORDER BY " + KEY_WHEN + " ASC";
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectEvents, null);
+
+        while (cursor.moveToNext()) {
+            Comment comment = new Comment(
+                    cursor.getString(0),
+                    cursor.getString(1),
+                    cursor.getString(2),
+                    cursor.getString(3),
+                    new Date(cursor.getLong(4)),
+                    cursor.getString(5));
+            comments.add(comment);
+        }
+        cursor.close();
+        db.close();
+        return comments;
     }
 
     public List<Event> getEvents() {
@@ -180,5 +232,6 @@ public class EventDatabase extends SQLiteOpenHelper {
     public void clear() {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("DELETE FROM " + EVENTS_TABLE);
+        db.execSQL("DELETE FROM " + COMMENTS_TABLE);
     }
 }

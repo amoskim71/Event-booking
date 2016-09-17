@@ -172,6 +172,17 @@ public class EventSynchronizer {
                                             e.getLong("latitude"));
                                     db.addEvent(event);
                                 }
+                                JSONArray comments = resp.getJSONArray("comments");
+                                for (int i = 0; i < comments.length(); i++) {
+                                    JSONObject c = comments.getJSONObject(i);
+                                    Comment comment = new Comment(
+                                            c.getString("eventid"),
+                                            c.getString("name"),
+                                            c.getString("email"),
+                                            new Date(c.getLong("cdate")),
+                                            c.getString("post"));
+                                    db.addComment(comment);
+                                }
                                 doneListener.syncDone();
 
                             } else { //error happened

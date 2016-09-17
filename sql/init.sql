@@ -59,3 +59,19 @@ create table pending_invites(
 	FOREIGN KEY (event_id) REFERENCES event (id)
 	ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+drop table if exists comments;
+create table comments(
+	id int(11) primary key auto_increment,
+	user_id int(11) NOT NULL,
+	event_id int(11) NOT NULL,
+	cdate real NOT NULL,
+	post varchar(1000) NOT NULL,
+	CONSTRAINT Constr_Comments_User_fk
+		FOREIGN KEY (user_id) REFERENCES user(id)
+		ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT Constr_Comments_Event_fk
+		FOREIGN KEY (user_id) REFERENCES events(id)
+		ON DELETE CASCADE ON UPDATE CASCADE
+);
+	
