@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (username == null || button == null) return; //menu not yet initialized
         SessionManager session = SessionManager.getInstance();
         if (session.isLoggedIn()) {
-            username.setText(session.getUserName());
+            username.setText(session.getUserName() + "  ");
             button.setText(R.string.logout);
         } else {
             username.setText("");

@@ -224,8 +224,17 @@ public class EventViewerActivity extends AppCompatActivity
     @Override
     public void onMapClick(LatLng point) {
         if (!editing) return;
-        if (eventMarker == null) return;
-        eventMarker.setPosition(point);
+        if (mMap == null) return;
+        if (eventMarker == null) {
+            String name = nameEdit.getText().toString();
+            if (name.equals("")) name = "New Event";
+            eventMarker = mMap.addMarker(new MarkerOptions()
+                    .position(new LatLng(point.latitude, point.longitude))
+                    .title(name)
+                    .draggable(false));
+        } else {
+            eventMarker.setPosition(point);
+        }
         eventMarker.showInfoWindow();
         event.setLongitude(point.longitude);
         event.setLatitude(point.latitude);

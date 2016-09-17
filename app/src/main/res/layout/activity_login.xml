@@ -35,11 +35,14 @@
                 android:layout_gravity="center_horizontal"/>
 
             <Button
+                android:layout_marginTop="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/login"
                 android:onClick="onLoginClicked"
-                android:layout_gravity="center_horizontal"/>
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/button"
+                android:textColor="@color/white"                />
 
             <TextView
                 android:layout_width="wrap_content"
