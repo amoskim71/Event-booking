@@ -15,6 +15,10 @@ Upcoming events are displayed on the main menu, but you can switch to the Past E
 
 <img src="https://github.com/gacsoft/letsmeethere/blob/master/images/main.png" width="300">
 
+You can send messages to discuss details or changes which will be seen by everyone participating in the event. 
+
+<img src="https://github.com/gacsoft/letsmeethere/blob/master/images/comments.png" width="300">
+
 # Backend
 Uses PHP with MySQL database for maximum compatibility. PHP files included. 
 

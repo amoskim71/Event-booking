@@ -57,7 +57,7 @@
     <string name="commentHint">Enter new comment&#8230;</string>
     <string name="sendingComment">Sending comment&#8230;</string>
     <string name="sentComment">Comment sent.</string>
-    <string name="sendComment">Send Comment</string>
+    <string name="sendComment">Send</string>
     <string name="postOffline">You must be logged in to send a comment!</string>
 
 </resources>
