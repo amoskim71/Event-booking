@@ -1,19 +1,53 @@
 <?php   
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
+require("include/Config.php");    
  
 class DB_Functions {
  
     private $sqlconn;
  
     function __construct() {
-	require_once 'include/Config.php';      
+	  
 		$this->sqlconn = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_DATABASE);
     }
  
     function __destruct() {
          
     }
+	
+	public function sendMessage($id, $message) {
+   
+		$url = 'https://fcm.googleapis.com/fcm/send';
+
+		$fields = array (
+			'to' => $id,
+			'priority' => 'high',
+			'notification' => array (
+					"body" => $message
+			)
+		);
+		$fields = json_encode ( $fields );
+
+		$headers = array (
+				'Authorization: key=' . FB_API_KEY,
+				'Content-Type: application/json'
+		);
+
+		$ch = curl_init ();
+		curl_setopt ( $ch, CURLOPT_URL, $url );
+		curl_setopt ( $ch, CURLOPT_POST, true );
+		curl_setopt ( $ch, CURLOPT_HTTPHEADER, $headers );
+		curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, true );
+		curl_setopt ( $ch, CURLOPT_POSTFIELDS, $fields );
+
+		if( ! $result = curl_exec($ch)) 
+		{ 
+			trigger_error(curl_error($ch)); 
+		} 
+		curl_close($ch); 
+		return $result; 
+	}	
  
     /**
      * Storing new user
@@ -132,7 +166,7 @@ class DB_Functions {
 		return array("error" => FALSE, "error_msg" => $rows);														
     }		
 	
-	public function fullSync($email, $session) {
+	public function fullSync($email, $session, $fbtoken) {
 		$stmt_user = $this->sqlconn->prepare("SELECT * FROM users WHERE email = ?");
 		$stmt_user->bind_param("s", $email);
 		$stmt_user->execute();
@@ -153,6 +187,16 @@ class DB_Functions {
 		$stmt->execute();
 		$result["events"] = mysqli_fetch_all ($stmt->get_result(), MYSQLI_ASSOC);
 		$stmt->close();
+		
+		if ($fbtoken != '') 
+		{
+			if (!$stmt_token = $this->sqlconn->prepare("UPDATE users SET token = ? WHERE email = ?")) {				
+				return array("error" => TRUE, "error_msg" => $this->sqlconn->errno . ' ' . $this->sqlconn->error);
+			}
+			$stmt_token->bind_param("ss", $fbtoken, $email);
+			$stmt_token->execute();
+			$stmt_token->close();			
+		}					
 		
 		if (!$stmt2 = $this->sqlconn->prepare("
 			SELECT eventid, name, email, cdate, post
@@ -190,7 +234,7 @@ class DB_Functions {
 			return array("error" => TRUE, "error_msg" => "BAD_SESSION");
 		}		
 		
-		if (!$stmt_event = $this->sqlconn->prepare("SELECT id, owner FROM events WHERE unique_id =?")) {
+		if (!$stmt_event = $this->sqlconn->prepare("SELECT id, name, owner FROM events WHERE unique_id =?")) {
 			return array("error" => TRUE, "error_msg" => $this->sqlconn->errno . ' ' . $this->sqlconn->error);			
 		}
 		$stmt_event->bind_param("s", $eventID);
@@ -208,7 +252,7 @@ class DB_Functions {
 		$invites = explode(",", $emails);			
 		
 		foreach ($invites as $invite) {
-			if (!$stmt_invitee = $this->sqlconn->prepare("SELECT id FROM users WHERE email = ?")) {
+			if (!$stmt_invitee = $this->sqlconn->prepare("SELECT * FROM users WHERE email = ?")) {
 				return array("error" => TRUE, "error_msg" => $this->sqlconn->errno . ' ' . $this->sqlconn->error);
 			}
 			$stmt_invitee->bind_param("s", $invite);
@@ -269,8 +313,12 @@ class DB_Functions {
 					$stmt_add->bind_param("ii", $invitee["id"], $event["id"]);
 					$stmt_add->execute();
 					$stmt_add->close();
-					return array("error" => FALSE, "error_msg" => "");
+					if ($invitee["token"] != null) { //if not null, try to send push notification
+						$nres = $this->sendMessage($invitee["token"], $user["name"] . " has invited you to " . $event["name"]);
+					}					
+					
 				}
+				return array("error" => FALSE, "error_msg" => "" . $nres);
 				
 			}
 			
@@ -414,7 +462,8 @@ class DB_Functions {
 		}
 		return array("error" => TRUE, "error_msg" => "BAD_SOMETHING");		
 	}
- 
+	
+
 }
  
 ?>

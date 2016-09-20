@@ -12,7 +12,8 @@ create table users(
    salt varchar(10) not null,
    created_at datetime,
    updated_at datetime null,
-   session varchar(50)
+   session varchar(50),
+   token varchar(200)
 );
 
 drop table if exists events;

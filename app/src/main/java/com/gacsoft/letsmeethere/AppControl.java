@@ -1,4 +1,5 @@
 package com.gacsoft.letsmeethere;
+import android.app.Activity;
 import android.app.Application;
 import java.util.Calendar;
 import java.util.Date;
@@ -16,6 +17,7 @@ public class AppControl extends Application {
     private static AppControl ourInstance;
     public static final String APP_TAG = AppControl.class.getSimpleName();
     public static Event eventStorage;
+    public static Activity activity;
 
     private RequestQueue requestQueue;
 

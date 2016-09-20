@@ -27,6 +27,13 @@
         <activity android:name=".EventViewerActivity" />
         <activity android:name=".InviteActivity" />
 
+        <service
+            android:name=".PushNotificationService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/googleMapsApiKey" />

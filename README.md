@@ -19,14 +19,19 @@ You can send messages to discuss details or changes which will be seen by everyo
 
 <img src="https://github.com/gacsoft/letsmeethere/blob/master/images/comments.png" width="300">
 
+The server will send push notifications to all invitees when you send out invitations. 
+
+<img src="https://github.com/gacsoft/letsmeethere/blob/master/images/notification.png" width="300">
+
 # Backend
 Uses PHP with MySQL database for maximum compatibility. PHP files included. 
 
 # Installing
 1. You will need the <a href="https://android.googlesource.com/platform/frameworks/volley/">volley library</a> to compile.<br>
-2. Edit <i>php/include/Config.php</i> and fill in your database details.<br>
+2. Edit <i>php/include/Config.php</i> and fill in your database details and your <a href="https://firebase.google.com/docs/cloud-messaging/">Google FireBase API key</a>.<br>
 3. Edit <i>app/src/main/res/values/api_keys.xml</i> and enter your Google Maps API key. (If you don't have one, you can <a href="https://developers.google.com/maps/documentation/javascript/get-api-key">get one for free here</a>).<br>
-4. Execute <i>sql/init.sql</i> to set up your database tables.
+4. Download your <i>google-services.json</i> configuration file from the FireBase website and put it into the /app/ folder. You will need to link the project to your Google Projects for this. 
+5. Execute <i>sql/init.sql</i> to set up your database tables.
 
 # License
 Distributed under MIT License, see the LICENSE file for details.

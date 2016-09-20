@@ -9,6 +9,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -227,6 +228,14 @@ public class EventSynchronizer {
                 SessionManager session = SessionManager.getInstance();
                 params.put("email", session.getEmail());
                 params.put("sessionID", session.getSessionID());
+                String token = FirebaseInstanceId.getInstance().getToken();
+                if (token != null) {
+                    params.put("token", token);
+                    if (AppConfig.DEBUG) System.out.println("Token: " + token);
+                } else {
+                    params.put("token", "");
+                }
+                if (AppConfig.DEBUG) System.out.println(params);
                 return params;
             }
         };
